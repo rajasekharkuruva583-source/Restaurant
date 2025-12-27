@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body{
+            background: linear-gradient(to right, #ea5f6a 0%, #ea5f6a 100%);
+        }
+        h1
+        {
+            padding: 15px;
+            background-color:goldenrod;
+            color: white;
+            font-style: oblique;
+           margin: 10px 500px 10px 500px;
+           border-radius: 35px 0px;
+        }
+        .btn2
+        {
+            color: white;
+            background-color:firebrick;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .btn2:hover{
+            cursor: pointer;
+            transform: scale(1.05);
+            background-color: green;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+    <center>
+        <h1>Insert Dish</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="create Dish" class="btn2">
+        </form>
+    </center>
+</body>
+</html>

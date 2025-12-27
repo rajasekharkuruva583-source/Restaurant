@@ -1,0 +1,91 @@
+
+
+{% extends 'dummy.html' %}
+{% load static %}
+{% block title %}
+<title>Review</title>
+<style>
+    body{
+        background: linear-gradient(to right, #c37c22 0%, #ae884c 100%);
+        background-image: url('{% static "images/Logo_for_Mine.png "%}');   
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        opacity: 0.8;
+        margin: 0px;
+        position: relative;
+    }
+    strong
+    {
+        background-color: brown;
+        color: white;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        padding: 20px;
+        border-radius: 20px;
+        font-style: oblique;
+    }
+    
+    h1
+    {
+        margin: 20px;
+    }
+    .button1{
+        padding: 10px;
+        background-color:white;
+        color:black;
+        font-style: initial;
+        
+        border-radius: 6px;
+    }
+    .button1:hover
+    {
+        cursor: pointer;
+        color:black;
+        background-color:green;
+        transform: scale(1.05);
+        padding: 15px;
+       
+    }
+    form{
+        
+        color:white;
+        font-family: Arial, Helvetica, sans-serif;
+
+    }
+    marquee{
+        
+        color: white;
+        font-style: oblique;
+        font-family: 'Lobster', cursive; 
+        margin-top: 10px;
+        padding: 10px;
+
+    }
+    
+</style>
+{% endblock %}
+
+
+{% block body_block %}
+<body>
+    
+
+    <center>
+
+        <marquee direction="left" scrollamount="10"> 🌟🧡💚 𝓜𝓲𝓷𝓮'𝓼 𝓡𝓮𝓼𝓽𝓪𝓾𝓻𝓪𝓷𝓽 🧡💚🌟 </marquee>
+        
+    <div class="bs">
+        
+            
+        
+        <h1><strong>Create Review</strong></h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="submit " class="button1">
+        </form>
+    </div>
+    </center>
+</body>
+{% endblock %}

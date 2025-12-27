@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- {% block title %}
+    <title>menu</title>
+    {% endblock %} -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> -->
+    <style>
+        body {
+            /* background:linear-gradient(to right, #3c3c3e 0%, #272324 100%); */
+            background-image: url('{% static "images/verduras-mesa.avif "%}');
+            background-repeat: no-repeat;
+            background-size: 1000px;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0px;
+            position: relative;
+        }
+
+        .navbar {
+            color: white;
+            text-align: center;
+            margin: 20px 500px 0px 500px;
+            position: sticky;
+            width: 350px;
+        }
+
+        #menu:hover {
+            background-color: black;
+            transform: scale(1.05);
+        }
+
+        #feedback:hover {
+            background-color: black;
+            transform: scale(1.05);
+        }
+
+        a {
+            padding: 10px;
+            background-color: crimson;
+            color: white;
+            border-radius: 5px;
+            margin: 10px;
+            
+
+        }
+
+        .btn:hover {
+            text-decoration: wavy;
+            background-color: coral;
+            cursor: pointer;
+            color: white;
+            transform: scale(1.05);
+
+        }
+
+        span {
+            background-color: rgb(1, 38, 39);
+            
+            color: white;
+            text-align: center;
+            margin-top: 100px;
+            padding: 10px;
+            border-radius: 10px;
+            font-style: oblique;
+        }
+        h1{
+            margin-top: 30px;
+        }
+
+
+        .data {
+            margin-top: 10px;
+        }
+        #bf{
+            margin-top: 30px;
+        }
+
+
+        img {
+            height: 100%;
+            position: fixed;
+
+            border-radius: 10px;
+            position: absolute;
+            background-attachment: fixed;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.9;
+       
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <nav class="navbar ">
+        <form class="container-fluid justify-content-center">
+
+            <a href="{% url 'menu_view' %}" class="nav-link text-white" id="menu">Menu</a>
+            <a href="{% url 'create_review' %}" class="nav-link text-white" id="feedback">Feedback</a>
+        </form>
+    </nav>
+
+    <center>
+        <div class="items">
+            <div class="leg" style="margin:0px 500px 0px 0px; width:500px;">
+                <img src="{% static 'images/New-logo.png' %}" alt="Mine's Restaurant Logo">
+            </div>
+            <div class="data"">
+                <h1><span>Item list</span></h1>
+
+                <li><a href=" {% url 'menu_category' 'BREAKFAST' %}" class="btn btn-primary" id="bf" type="button" >
+                Breakfast</a>
+                </li>
+                <li><a href="{% url 'menu_category' 'VEG' %}" class="btn btn-primary" type="button">Vegetarian</a></li>
+                <li><a href="{% url 'menu_category' 'NON_VEG' %}" class="btn btn-primary"
+                        type="button">Non_Vegetarian</a>
+                </li>
+                <li><a href="{% url 'menu_category' 'STARTERS' %}" class="btn btn-primary" type="button">Starters</a>
+                </li>
+                <li><a href="{% url 'menu_category' 'ICE_CREAM' %}" class="btn btn-primary" type="button">Ice Cream</a>
+                </li>
+            </div>
+        </div>
+
+
+    </center>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+   
+
+</body>
+
+</html>
