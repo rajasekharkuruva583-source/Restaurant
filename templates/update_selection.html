@@ -1,33 +1,582 @@
+
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Selected Dishes | Mine's Restaurant</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        :root {
+            --mine-green: #087f5b;
+            --mine-dark: #063b36;
+            --mine-gold: #f5c451;
+            --mine-red: #c62828;
+            --glass: rgba(255, 255, 255, .96);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            color: #24312e;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(
+                    ellipse at 12% 8%,
+                    rgba(255, 220, 150, .24),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #56392f 0%,
+                    #8b6856 48%,
+                    #c4ad94 100%
+                );
+            background-attachment: fixed;
+        }
+
+        /* Compact restaurant header */
+        .page-header {
+            text-align: center;
+            color: #fff;
+            padding: 12px 12px 14px;
+            animation: headerEnter .6s ease both;
+        }
+
+        .brand-logo {
+            display: block;
+            width: 58px;
+            height: 58px;
+            object-fit: contain;
+            margin: 0 auto 8px;
+            padding: 4px;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 5px 14px rgba(0, 0, 0, .16);
+            animation: logoEnter .7s ease both;
+        }
+
+        /* Scrolling Mine's Restaurant title */
+        .restaurant-marquee {
+            width: min(100%, 420px);
+            margin: 0 auto 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 6px 0;
+            border-radius: 10px;
+            background: rgba(6, 59, 54, .48);
+            border: 1px solid rgba(245, 196, 81, .48);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .10);
+        }
+
+        .restaurant-marquee span {
+            display: inline-block;
+            padding-left: 100%;
+            color: #fff4dc;
+            font-size: clamp(15px, 2vw, 20px);
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, .25);
+            animation: mineSlide 13s linear infinite;
+        }
+
+        .restaurant-marquee span::after {
+            content: "  ✦  FLAVOURS OF RAYALASEEMA";
+            color: var(--mine-gold);
+            font-size: .72em;
+        }
+
+        @keyframes mineSlide {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-100%); }
+        }
+
+        .page-title {
+            display: inline-block;
+            margin: 0;
+            padding: 7px 16px;
+            color: #fff;
+            font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+            font-weight: 750;
+            border-radius: 11px;
+            background: rgba(5, 49, 44, .55);
+            border: 1px solid rgba(255, 255, 255, .2);
+            box-shadow: 0 5px 14px rgba(0, 0, 0, .10);
+        }
+
+        .page-subtitle {
+            margin: 6px 0 0;
+            color: #fff4dc;
+            font-size: .88rem;
+        }
+
+        main.container {
+            max-width: 1120px;
+            padding-bottom: 22px !important;
+        }
+
+        /* Shorter total plates and subtotal section */
+        .summary-card,
+        .dish-card,
+        .empty-card {
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, .75);
+            border-radius: 15px;
+            padding: 12px 18px;
+            margin-bottom: 10px;
+            box-shadow: 0 6px 17px rgba(42, 25, 17, .13);
+            backdrop-filter: blur(8px);
+            animation: cardEnter .45s ease both;
+        }
+
+        .summary-card {
+            border-top: 3px solid var(--mine-gold);
+        }
+
+        .summary-label {
+            color: #596660;
+            font-size: .82rem;
+            font-weight: 600;
+        }
+
+        .summary-value {
+            color: var(--mine-dark);
+            font-size: 1.2rem;
+            line-height: 1.35;
+            font-weight: 800;
+        }
+
+        .summary-total {
+            color: var(--mine-green);
+        }
+
+        /* Compact selected dish card */
+        .dish-card {
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .dish-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 9px 20px rgba(42, 25, 17, .18);
+        }
+
+        .dish-card .row {
+            --bs-gutter-x: 12px;
+            --bs-gutter-y: 6px;
+        }
+
+        .dish-image {
+            display: block;
+            width: 72px;
+            height: 72px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 3px 9px rgba(0, 0, 0, .12);
+        }
+
+        .dish-name {
+            margin: 0 0 3px;
+            color: #243b35;
+            font-size: 1rem;
+            font-weight: 750;
+        }
+
+        .dish-description {
+            margin-bottom: 4px !important;
+            color: #66716d;
+            font-size: .86rem;
+        }
+
+        .dish-price {
+            margin-bottom: 3px !important;
+            color: var(--mine-red);
+            font-size: .86rem;
+            font-weight: 800;
+        }
+
+        .dish-card p {
+            font-size: .84rem;
+            line-height: 1.35;
+        }
+
+        .item-total {
+            color: var(--mine-dark);
+            font-weight: 800;
+        }
+
+        /* Quantity buttons */
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .quantity-control form {
+            margin: 0;
+        }
+
+        .quantity-number {
+            min-width: 20px;
+            text-align: center;
+            font-size: .95rem;
+            font-weight: 800;
+        }
+
+        .qty-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            border-radius: 9px;
+            background: #fff;
+            font-size: 1.15rem;
+            line-height: 1;
+            transition: transform .18s ease, box-shadow .18s ease;
+        }
+
+        .qty-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, .12);
+        }
+
+        .qty-minus {
+            color: #c62828;
+            border: 1px solid #e85c66;
+        }
+
+        .qty-plus {
+            color: var(--mine-green);
+            border: 1px solid #19986c;
+        }
+
+        /* Main action buttons */
+        .btn-mine {
+            border: 0;
+            border-radius: 10px;
+            padding: 9px 17px;
+            font-size: .9rem;
+            font-weight: 700;
+            box-shadow: 0 4px 11px rgba(0, 0, 0, .12);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .btn-mine:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, .17);
+        }
+
+        .btn-clear {
+            background: var(--mine-gold);
+            color: #352617;
+        }
+
+        .btn-checkout {
+            background: linear-gradient(135deg, #07865d, #056747);
+            color: #fff;
+        }
+
+        .btn-checkout:hover {
+            color: #fff;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 2px;
+            padding: 7px 12px;
+            border-radius: 9px;
+            color: #fff;
+            text-decoration: none;
+            font-size: .88rem;
+            font-weight: 650;
+            background: rgba(4, 48, 43, .35);
+        }
+
+        .back-link:hover {
+            color: #fff;
+            background: rgba(4, 48, 43, .65);
+        }
+
+        .empty-card {
+            padding: 25px 18px;
+            text-align: center;
+            color: #fff;
+            background: rgba(255, 255, 255, .12);
+            border: 1px solid rgba(255, 255, 255, .28);
+        }
+
+        .empty-card h2 {
+            font-weight: 750;
+        }
+
+        @keyframes headerEnter {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes logoEnter {
+            from { opacity: 0; transform: scale(.9); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes cardEnter {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 767.98px) {
+            .page-header {
+                padding: 12px 10px;
+            }
+
+            .brand-logo {
+                width: 52px;
+                height: 52px;
+            }
+
+            .summary-card,
+            .dish-card {
+                padding: 11px;
+            }
+
+            .dish-image {
+                width: 64px;
+                height: 64px;
+            }
+
+            .quantity-control {
+                justify-content: flex-end;
+            }
+
+            .dish-card .col-12.col-md {
+                flex: 1 1 0;
+                min-width: 0;
+            }
+
+            .dish-card .col-12.col-md-auto {
+                width: auto;
+                flex: 0 0 auto;
+            }
+
+            .dish-card .row {
+                flex-wrap: nowrap;
+            }
+
+            .dish-name {
+                font-size: .94rem;
+            }
+
+            .dish-description,
+            .dish-price,
+            .dish-card p {
+                font-size: .79rem;
+            }
+
+            .qty-btn {
+                width: 30px;
+                height: 30px;
+            }
+
+            .restaurant-marquee {
+                max-width: 340px;
+            }
+
+            .btn-mine {
+                padding: 8px 12px;
+                font-size: .84rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .dish-image {
+                width: 52px;
+                height: 52px;
+            }
+
+            .dish-card .row {
+                --bs-gutter-x: 8px;
+            }
+
+            .quantity-control {
+                gap: 4px;
+            }
+
+            .qty-btn {
+                width: 27px;
+                height: 29px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+            }
+
+            .restaurant-marquee span {
+                animation: none;
+                padding-left: 0;
+                white-space: normal;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <center>
-        <h2 class="mt-5">Your Selected Items</h2>
+<header class="page-header">
+    <img
+        src="{% static 'images/Mine_logo.png ' %}"
+        alt="Mine's Restaurant logo"
+        class="brand-logo"
+    >
+    <div class="restaurant-marquee" aria-label="Mine's Restaurant">
+        <span>MINE'S RESTAURANT</span>
+    </div>
 
-        <!-- Debug line -->
-        <p>Session IDs: {{ request.session.selected_items }}</p>
+    <h1 class="page-title">Your Selected Dishes</h1>
+    <p class="page-subtitle">Mine's Restaurant · Flavours of Rayalaseema</p>
+</header>
 
-        {% if selected_items %}
-        <ul class="list-group">
-            {% for dish in selected_items %}
-            <li class="list-group-item">
-                {{ dish.name }} - ₹{{ dish.price }}
-            </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p>No items selected yet.</p>
-        {% endif %}
+<main class="container pb-4">
+    {% if selected_items %}
 
-    </center>
+        <section class="summary-card" aria-label="Order summary">
+            <div class="row align-items-center g-2">
+                <div class="col-6">
+                    <div class="summary-label">Total Plates</div>
+                    <div class="summary-value">{{ selected_count }}</div>
+                </div>
 
+                <div class="col-6 text-end">
+                    <div class="summary-label">Subtotal</div>
+                    <div class="summary-value summary-total">
+                        ₹{{ subtotal|floatformat:2 }}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {% for dish in selected_items %}
+        <article class="dish-card">
+            <div class="row align-items-center">
+
+                {% if dish.image %}
+                <div class="col-auto">
+                    <img
+                        src="{{ dish.image.url }}"
+                        alt="{{ dish.name }}"
+                        class="dish-image"
+                    >
+                </div>
+                {% endif %}
+
+                <div class="col-12 col-md">
+                    <h2 class="dish-name">{{ dish.name }}</h2>
+
+                    <p class="dish-description">
+                        {{ dish.description }}
+                    </p>
+
+                    <p class="dish-price">
+                        ₹{{ dish.price|floatformat:2 }} per plate
+                    </p>
+
+                    <p class="mb-1">
+                        Quantity: <strong>{{ dish.quantity }}</strong>
+                    </p>
+
+                    <p class="item-total mb-0">
+                        Item total: ₹{{ dish.line_total|floatformat:2 }}
+                    </p>
+                </div>
+
+                <div class="col-12 col-md-auto">
+                    <div class="quantity-control">
+                        <form method="post" action="{% url 'update_selection' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="dish_id" value="{{ dish.id }}">
+
+                            <button
+                                type="submit"
+                                name="action"
+                                value="remove"
+                                class="qty-btn qty-minus"
+                                aria-label="Decrease {{ dish.name }} quantity"
+                            >−</button>
+                        </form>
+
+                        <span class="quantity-number">{{ dish.quantity }}</span>
+
+                        <form method="post" action="{% url 'update_selection' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="dish_id" value="{{ dish.id }}">
+
+                            <button
+                                type="submit"
+                                name="action"
+                                value="add"
+                                class="qty-btn qty-plus"
+                                aria-label="Increase {{ dish.name }} quantity"
+                            >+</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </article>
+        {% endfor %}
+
+        <div class="d-flex flex-column flex-sm-row
+                    justify-content-center align-items-center gap-2 mt-3">
+
+            <form
+                method="post"
+                action="{% url 'update_selection' %}"
+                onsubmit="return confirm('Clear all selected dishes?');"
+            >
+                {% csrf_token %}
+                <button
+                    type="submit"
+                    name="action"
+                    value="clear"
+                    class="btn btn-mine btn-clear"
+                >
+                    Clear Selection
+                </button>
+            </form>
+
+            <a href="{% url 'checkout' %}"
+               class="btn btn-mine btn-checkout">
+                Proceed to Checkout <span aria-hidden="true">→</span>
+            </a>
+        </div>
+
+    {% else %}
+
+        <section class="empty-card">
+            <h2 class="h5">Your selection is waiting for you</h2>
+            <p class="mb-0">
+                Return to the menu and tap + to add your favourite dishes.
+            </p>
+        </section>
+
+    {% endif %}
+
+    <div class="text-center mt-3">
+        <a href="{% url 'menu_view' %}" class="back-link">
+            ← Back to Menu
+        </a>
+    </div>
+</main>
 </body>
-
 </html>

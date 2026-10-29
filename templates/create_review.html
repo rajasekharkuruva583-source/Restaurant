@@ -1,91 +1,386 @@
 
-
-{% extends 'dummy.html' %}
 {% load static %}
-{% block title %}
-<title>Review</title>
-<style>
-    body{
-        background: linear-gradient(to right, #c37c22 0%, #ae884c 100%);
-        background-image: url('{% static "images/Logo_for_Mine.png "%}');   
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        opacity: 0.8;
-        margin: 0px;
-        position: relative;
-    }
-    strong
-    {
-        background-color: brown;
-        color: white;
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-        padding: 20px;
-        border-radius: 20px;
-        font-style: oblique;
-    }
-    
-    h1
-    {
-        margin: 20px;
-    }
-    .button1{
-        padding: 10px;
-        background-color:white;
-        color:black;
-        font-style: initial;
-        
-        border-radius: 6px;
-    }
-    .button1:hover
-    {
-        cursor: pointer;
-        color:black;
-        background-color:green;
-        transform: scale(1.05);
-        padding: 15px;
-       
-    }
-    form{
-        
-        color:white;
-        font-family: Arial, Helvetica, sans-serif;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Review | Mine's Restaurant</title>
 
-    }
-    marquee{
-        
-        color: white;
-        font-style: oblique;
-        font-family: 'Lobster', cursive; 
-        margin-top: 10px;
-        padding: 10px;
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
-    }
-    
-</style>
-{% endblock %}
+    <style>
+        :root {
+            --green: #087f5b;
+            --dark-green: #063b36;
+            --gold: #f5c451;
+            --brown: #56392f;
+            --red: #a52828;
+        }
 
+        * {
+            box-sizing: border-box;
+        }
 
-{% block body_block %}
+        html {
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #26332e;
+            background: linear-gradient(
+                135deg,
+                #56392f 0%,
+                #8b6856 50%,
+                #c4ad94 100%
+            );
+        }
+
+        /* Compact navigation */
+        .top-nav {
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 6px 12px;
+            background: #202626;
+        }
+
+        .top-nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 650;
+            padding: 5px 12px;
+            border-radius: 7px;
+        }
+
+        .top-nav a:hover {
+            color: var(--gold);
+            background: rgba(255,255,255,.08);
+        }
+
+        /* Small brand header */
+        .page-header {
+            width: 100%;
+            padding: 15px 12px 13px;
+            text-align: center;
+            color: white;
+        }
+
+        .brand-logo {
+            display: block;
+            width: 64px;
+            height: 64px;
+            max-width: 100%;
+            object-fit: contain;
+            margin: 0 auto 8px;
+            padding: 4px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 5px 14px rgba(0,0,0,.18);
+        }
+
+        .brand-name {
+            display: inline-block;
+            max-width: 100%;
+            margin: 0 auto 8px;
+            padding: 7px 15px;
+            border: 1px solid rgba(245,196,81,.55);
+            border-radius: 10px;
+            background: rgba(6,59,54,.7);
+            color: #fff;
+            font-size: clamp(15px, 3vw, 21px);
+            font-weight: 800;
+            letter-spacing: 1.3px;
+            overflow-wrap: anywhere;
+        }
+
+        .brand-name span {
+            color: var(--gold);
+        }
+
+        .tagline {
+            margin: 0 0 10px;
+            color: #fff1d0;
+            font-size: 12px;
+            letter-spacing: .6px;
+        }
+
+        .page-title {
+            display: inline-block;
+            margin: 0;
+            padding: 8px 20px;
+            border-radius: 11px;
+            background: var(--red);
+            color: white;
+            font-size: clamp(21px, 4vw, 29px);
+            font-weight: 800;
+            box-shadow: 0 5px 13px rgba(0,0,0,.15);
+        }
+
+        /* Form container */
+        .review-wrapper {
+            width: calc(100% - 24px);
+            max-width: 560px;
+            margin: 0 auto;
+            padding-bottom: 25px;
+        }
+
+        .review-card {
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,.75);
+            border-radius: 16px;
+            background: rgba(255,255,255,.97);
+            box-shadow: 0 12px 30px rgba(40,24,16,.2);
+        }
+
+        .card-intro {
+            margin-bottom: 17px;
+            color: #66716d;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .section-label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--dark-green);
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .field-group {
+            margin-bottom: 15px;
+        }
+
+        /* Style Django-generated controls */
+        .review-card input:not([type="checkbox"]):not([type="radio"]),
+        .review-card select,
+        .review-card textarea {
+            display: block;
+            width: 100%;
+            min-width: 0;
+            max-width: 100%;
+            min-height: 42px;
+            padding: 9px 11px;
+            border: 1px solid #cfd9d3;
+            border-radius: 9px;
+            background-color: #fff;
+            color: #26332e;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.4;
+            box-shadow: none;
+        }
+
+        .review-card textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .review-card input:focus,
+        .review-card select:focus,
+        .review-card textarea:focus {
+            outline: none;
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(8,127,91,.12);
+        }
+
+        .review-card input[type="date"] {
+            width: 100%;
+        }
+
+        .rating-note {
+            margin-top: 5px;
+            color: #6a756f;
+            font-size: 12px;
+        }
+
+        .errorlist {
+            margin: 5px 0 0;
+            padding-left: 18px;
+            color: #b42323;
+            font-size: 12px;
+        }
+
+        .field-error {
+            margin-top: 5px;
+            color: #b42323;
+            font-size: 12px;
+        }
+
+        .submit-button {
+            display: block;
+            width: 100%;
+            margin-top: 5px;
+            padding: 11px 16px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #07865d, #056747);
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .submit-button:hover {
+            background: #045b41;
+            transform: translateY(-1px);
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 9px 15px;
+            border-radius: 9px;
+            background: rgba(4,48,43,.85);
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .back-button:hover {
+            background: #063b36;
+            color: white;
+        }
+
+        .alert {
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding-top: 12px;
+            }
+
+            .brand-logo {
+                width: 54px;
+                height: 54px;
+            }
+
+            .review-card {
+                padding: 15px;
+            }
+
+            .page-title {
+                padding: 8px 15px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
 <body>
-    
 
-    <center>
+<nav class="top-nav" aria-label="Main navigation">
+    <a href="{% url 'menu_view' %}">Menu</a>
+    <a href="{% url 'create_review' %}" aria-current="page">Feedback</a>
+</nav>
 
-        <marquee direction="left" scrollamount="10"> 🌟🧡💚 𝓜𝓲𝓷𝓮'𝓼 𝓡𝓮𝓼𝓽𝓪𝓾𝓻𝓪𝓷𝓽 🧡💚🌟 </marquee>
-        
-    <div class="bs">
-        
-            
-        
-        <h1><strong>Create Review</strong></h1>
-        <form method="POST">
-            {% csrf_token %}
-            {{form.as_p}}
-            <input type="submit" value="submit " class="button1">
-        </form>
+<header class="page-header">
+    <img
+        src="{% static 'images/Mine_logo.png' %}"
+        alt="Mine's Restaurant logo"
+        class="brand-logo"
+    >
+
+    <div class="brand-name">
+        MINE'S <span>RESTAURANT</span>
     </div>
-    </center>
+
+    <p class="tagline">FLAVOURS OF RAYALASEEMA</p>
+
+    <h1 class="page-title">Create Review</h1>
+</header>
+
+<main class="review-wrapper">
+    <section class="review-card">
+
+        <p class="card-intro">
+            We value your feedback! Share your experience with our food
+            and help us make your next visit even better.
+        </p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success py-2" role="status">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger py-2">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="field-group">
+
+                    <label
+                        class="section-label"
+                        for="{{ field.id_for_label }}"
+                    >
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.name == "rating" %}
+                        <div class="rating-note">
+                            Please choose a rating between 1 and 5.
+                        </div>
+                    {% endif %}
+
+                    {% if field.help_text %}
+                        <div class="rating-note">
+                            {{ field.help_text }}
+                        </div>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <div class="field-error">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="submit-button">
+                Submit Review
+            </button>
+        </form>
+
+    </section>
+
+    <div class="text-center">
+        <a href="{% url 'menu_view' %}" class="back-button">
+            &larr; Back to Menu
+        </a>
+    </div>
+</main>
+
 </body>
-{% endblock %}
+</html>

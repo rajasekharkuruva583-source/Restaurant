@@ -1,0 +1,394 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Mine's Restaurant</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        :root {
+            --green: #087f5b;
+            --dark: #063b36;
+            --gold: #f5c451;
+            --red: #c62828;
+            --glass: rgba(255,255,255,.96);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            color: #24312e;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(ellipse at 12% 8%, rgba(255,220,150,.24), transparent 35%),
+                linear-gradient(135deg, #56392f 0%, #8b6856 48%, #c4ad94 100%);
+            background-attachment: fixed;
+        }
+
+        .page-header {
+            text-align: center;
+            color: #fff;
+            padding: 12px 12px 14px;
+            animation: enter .6s ease both;
+        }
+
+        .brand-logo {
+            display: block;
+            width: 58px;
+            height: 58px;
+            object-fit: contain;
+            margin: 0 auto 8px;
+            padding: 4px;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 5px 14px rgba(0,0,0,.16);
+        }
+
+        .restaurant-marquee {
+            width: min(100%, 420px);
+            margin: 0 auto 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 6px 0;
+            border-radius: 10px;
+            background: rgba(6,59,54,.48);
+            border: 1px solid rgba(245,196,81,.48);
+        }
+
+        .restaurant-marquee span {
+            display: inline-block;
+            padding-left: 100%;
+            color: #fff4dc;
+            font-size: clamp(15px, 2vw, 20px);
+            font-weight: 800;
+            letter-spacing: 1px;
+            animation: slide 13s linear infinite;
+        }
+
+        .restaurant-marquee span::after {
+            content: "  ✦  FLAVOURS OF RAYALASEEMA";
+            color: var(--gold);
+            font-size: .72em;
+        }
+
+        .page-title {
+            display: inline-block;
+            margin: 0;
+            padding: 7px 18px;
+            border-radius: 11px;
+            color: #fff;
+            font-size: clamp(1.25rem, 2.5vw, 1.7rem);
+            font-weight: 800;
+            background: rgba(5,49,44,.55);
+            border: 1px solid rgba(255,255,255,.2);
+        }
+
+        .page-subtitle {
+            margin: 6px 0 0;
+            color: #fff4dc;
+            font-size: .88rem;
+        }
+
+        main.container { max-width: 1100px; }
+
+        .panel {
+            height: 100%;
+            padding: 16px;
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,.75);
+            border-radius: 15px;
+            box-shadow: 0 7px 19px rgba(42,25,17,.14);
+            animation: enter .45s ease both;
+        }
+
+        .panel-heading {
+            display: inline-block;
+            margin: 0 0 14px;
+            padding: 6px 11px;
+            border-radius: 9px;
+            color: var(--dark);
+            background: #fff2cd;
+            border-left: 3px solid var(--gold);
+            font-size: 1.05rem;
+            font-weight: 800;
+        }
+
+        .form-label {
+            margin-bottom: 5px;
+            color: #394a44;
+            font-size: .88rem;
+            font-weight: 650;
+        }
+
+        .form-control, .form-select, input, select, textarea {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 9px !important;
+            border: 1px solid #d6dfda !important;
+            padding: 9px 11px !important;
+            font-size: .92rem;
+        }
+
+        .form-control:focus, .form-select:focus,
+        input:focus, select:focus, textarea:focus {
+            border-color: #299a76 !important;
+            box-shadow: 0 0 0 .18rem rgba(8,127,91,.13) !important;
+        }
+
+        .field-error {
+            margin-top: 4px;
+            color: var(--red);
+            font-size: .82rem;
+        }
+
+        .form-text { font-size: .78rem; }
+
+        .checkout-button {
+            width: 100%;
+            padding: 10px 16px;
+            border: 0;
+            border-radius: 10px;
+            color: #fff;
+            background: linear-gradient(135deg, #07865d, #056747);
+            font-weight: 800;
+            box-shadow: 0 4px 11px rgba(5,103,71,.18);
+            transition: transform .2s ease;
+        }
+
+        .checkout-button:hover {
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .order-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 9px 0;
+            border-bottom: 1px solid #e8ece9;
+        }
+
+        .order-line:last-of-type { border-bottom: 0; }
+
+        .order-name {
+            color: #263b34;
+            font-size: .92rem;
+            font-weight: 750;
+        }
+
+        .price {
+            color: var(--red);
+            font-size: .9rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            padding: 11px;
+            border-radius: 10px;
+            background: #eaf8f0;
+            border: 1px solid #c4ead8;
+        }
+
+        .summary-total strong {
+            color: var(--green);
+            font-size: 1.2rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            padding: 8px 13px;
+            border-radius: 9px;
+            color: #fff;
+            text-decoration: none;
+            font-size: .88rem;
+            font-weight: 650;
+            background: rgba(4,48,43,.4);
+        }
+
+        .back-link:hover {
+            color: #fff;
+            background: rgba(4,48,43,.7);
+        }
+
+        @keyframes slide {
+            from { transform: translateX(0); }
+            to { transform: translateX(-100%); }
+        }
+
+        @keyframes enter {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 767.98px) {
+            .page-header { padding-top: 10px; }
+            .brand-logo { width: 52px; height: 52px; }
+            .panel { padding: 13px; }
+            main.container { padding-left: 12px; padding-right: 12px; }
+            .restaurant-marquee { max-width: 340px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+            }
+            .restaurant-marquee span {
+                animation: none;
+                padding-left: 0;
+                white-space: normal;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<header class="page-header">
+    <img src="{% static 'images/Mine_logo.png' %}"
+         alt="Mine's Restaurant logo" class="brand-logo">
+
+    <div class="restaurant-marquee" aria-label="Mine's Restaurant">
+        <span>MINE'S RESTAURANT</span>
+    </div>
+
+    <h1 class="page-title">Checkout</h1>
+    <p class="page-subtitle">Mine's Restaurant · Flavours of Rayalaseema</p>
+</header>
+
+<main class="container pb-4">
+    {% if form %}
+    <div class="row g-3 align-items-start">
+
+        <section class="col-lg-7">
+            <div class="panel">
+                <h2 class="panel-heading">Customer Details</h2>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger rounded-3 py-2">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="form-label d-block"
+                               for="{{ form.customer_name.id_for_label }}">
+                            {{ form.customer_name.label }}
+                        </label>
+                        {{ form.customer_name }}
+                        {% for error in form.customer_name.errors %}
+                        <div class="field-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label d-block"
+                               for="{{ form.phone.id_for_label }}">
+                            {{ form.phone.label }}
+                        </label>
+                        {{ form.phone }}
+                        {% for error in form.phone.errors %}
+                        <div class="field-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label d-block"
+                               for="{{ form.order_type.id_for_label }}">
+                            {{ form.order_type.label }}
+                        </label>
+                        {{ form.order_type }}
+                        {% for error in form.order_type.errors %}
+                        <div class="field-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label d-block"
+                               for="{{ form.delivery_address.id_for_label }}">
+                            {{ form.delivery_address.label }}
+                        </label>
+                        {{ form.delivery_address }}
+                        {% for error in form.delivery_address.errors %}
+                        <div class="field-error">{{ error }}</div>
+                        {% endfor %}
+                        <div class="form-text">
+                            Required only for delivery orders.
+                        </div>
+                    </div>
+
+                    <button type="submit" class="checkout-button">
+                        Place Order <span aria-hidden="true">→</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <aside class="col-lg-5">
+            <div class="panel">
+                <h2 class="panel-heading">Your Order</h2>
+
+                {% for line in order_lines %}
+                <div class="order-line">
+                    <div>
+                        <div class="order-name">{{ line.dish.name }}</div>
+                        <div class="text-secondary small">
+                            {{ line.quantity }} × ₹{{ line.unit_price|floatformat:2 }}
+                        </div>
+                    </div>
+                    <strong class="price">
+                        ₹{{ line.line_total|floatformat:2 }}
+                    </strong>
+                </div>
+                {% empty %}
+                <p class="text-secondary small">
+                    No dishes have been added to this order.
+                </p>
+                {% endfor %}
+
+                <div class="d-flex justify-content-between mt-2 py-2">
+                    <span class="text-secondary small">Total plates</span>
+                    <strong>{{ selected_count }}</strong>
+                </div>
+
+                <div class="summary-total">
+                    <span class="fw-bold">Subtotal</span>
+                    <strong>₹{{ subtotal|floatformat:2 }}</strong>
+                </div>
+
+                <p class="small text-secondary mt-3 mb-0">
+                    Payment is not collected online in this version.
+                </p>
+            </div>
+        </aside>
+
+    </div>
+    {% else %}
+    <div class="panel text-center">
+        <h2 class="panel-heading">Checkout Unavailable</h2>
+        <p>Please return to your selected dishes and try again.</p>
+    </div>
+    {% endif %}
+
+    <div class="text-center mt-3">
+        <a href="{% url 'update_selection' %}" class="back-link">
+            ← Back to Selected Dishes
+        </a>
+    </div>
+</main>
+</body>
+</html>

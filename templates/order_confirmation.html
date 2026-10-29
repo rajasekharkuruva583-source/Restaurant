@@ -1,0 +1,393 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed | Mine's Restaurant</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        :root {
+            --green: #087f5b;
+            --dark: #063b36;
+            --gold: #f5c451;
+            --glass: rgba(255,255,255,.96);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            color: #24312e;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(ellipse at 12% 8%, rgba(255,220,150,.24), transparent 35%),
+                linear-gradient(135deg, #56392f 0%, #8b6856 48%, #c4ad94 100%);
+            background-attachment: fixed;
+        }
+
+        .page-header {
+            padding: 12px 12px 14px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .brand-logo {
+            display: block;
+            width: 58px;
+            height: 58px;
+            object-fit: contain;
+            margin: 0 auto 8px;
+            padding: 4px;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 5px 14px rgba(0,0,0,.16);
+        }
+
+        .restaurant-marquee {
+            width: min(100%, 420px);
+            margin: 0 auto 10px;
+            padding: 6px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            border-radius: 10px;
+            background: rgba(6,59,54,.48);
+            border: 1px solid rgba(245,196,81,.48);
+        }
+
+        .restaurant-marquee span {
+            display: inline-block;
+            padding-left: 100%;
+            color: #fff4dc;
+            font-size: clamp(15px, 2vw, 20px);
+            font-weight: 800;
+            letter-spacing: 1px;
+            animation: slide 13s linear infinite;
+        }
+
+        .restaurant-marquee span::after {
+            content: "  ✦  FLAVOURS OF RAYALASEEMA";
+            color: var(--gold);
+            font-size: .72em;
+        }
+
+        .page-title {
+            display: inline-block;
+            margin: 0;
+            padding: 7px 18px;
+            border-radius: 11px;
+            color: #fff;
+            font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+            font-weight: 800;
+            background: rgba(5,49,44,.55);
+            border: 1px solid rgba(255,255,255,.2);
+        }
+
+        .page-subtitle {
+            margin: 6px 0 0;
+            color: #fff4dc;
+            font-size: .88rem;
+        }
+
+        main.container { max-width: 760px; }
+
+        .panel {
+            padding: 17px;
+            margin-bottom: 12px;
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,.75);
+            border-radius: 15px;
+            box-shadow: 0 7px 19px rgba(42,25,17,.14);
+        }
+
+        .success-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            color: #fff;
+            background: linear-gradient(135deg, #0a9668, #056747);
+            font-size: 1.8rem;
+            font-weight: 800;
+            box-shadow: 0 5px 14px rgba(8,127,91,.2);
+        }
+
+        .success-heading {
+            margin-bottom: 6px;
+            color: var(--dark);
+            font-size: clamp(1.25rem, 3vw, 1.7rem);
+            font-weight: 800;
+        }
+
+        .muted { color: #66716d; }
+
+        .order-number {
+            display: inline-block;
+            margin-top: 7px;
+            padding: 7px 12px;
+            border: 1px dashed #c7a64e;
+            border-radius: 9px;
+            color: var(--dark);
+            background: #fff8e6;
+            font-weight: 800;
+            overflow-wrap: anywhere;
+        }
+
+        .section-heading {
+            margin: 0 0 12px;
+            color: var(--dark);
+            font-size: 1.02rem;
+            font-weight: 800;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e8ece9;
+            font-size: .9rem;
+        }
+
+        .detail-row:last-child { border-bottom: 0; }
+
+        .detail-label { color: #66716d; }
+
+        .detail-value {
+            text-align: right;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 9px 0;
+            border-bottom: 1px solid #e8ece9;
+        }
+
+        .item-name {
+            color: #263b34;
+            font-size: .92rem;
+            font-weight: 750;
+        }
+
+        .item-price {
+            color: var(--green);
+            font-size: .9rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+            padding: 12px;
+            border: 1px solid #c4ead8;
+            border-radius: 10px;
+            background: #eaf8f0;
+            font-weight: 800;
+        }
+
+        .total-row strong {
+            color: var(--green);
+            font-size: 1.25rem;
+        }
+
+        .btn-mine {
+            display: inline-block;
+            padding: 9px 15px;
+            border: 0;
+            border-radius: 10px;
+            font-size: .88rem;
+            font-weight: 750;
+            text-decoration: none;
+            transition: transform .2s ease;
+        }
+
+        .btn-mine:hover { transform: translateY(-1px); }
+
+        .btn-green {
+            color: #fff;
+            background: linear-gradient(135deg, #07865d, #056747);
+        }
+
+        .btn-green:hover { color: #fff; }
+
+        .btn-gold {
+            color: #352617;
+            background: var(--gold);
+        }
+
+        .btn-dark {
+            color: #fff;
+            background: rgba(4,48,43,.82);
+        }
+
+        .btn-dark:hover { color: #fff; }
+
+        @keyframes slide {
+            from { transform: translateX(0); }
+            to { transform: translateX(-100%); }
+        }
+
+        @media (max-width: 575.98px) {
+            .brand-logo {
+                width: 52px;
+                height: 52px;
+            }
+
+            main.container {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .panel { padding: 13px; }
+
+            .btn-mine {
+                padding: 8px 11px;
+                font-size: .82rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+            }
+
+            .restaurant-marquee span {
+                animation: none;
+                padding-left: 0;
+                white-space: normal;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<header class="page-header">
+    <img src="{% static 'images/Mine_logo.png' %}"
+         alt="Mine's Restaurant logo" class="brand-logo">
+
+    <div class="restaurant-marquee" aria-label="Mine's Restaurant">
+        <span>MINE'S RESTAURANT</span>
+    </div>
+
+    <h1 class="page-title">Order Confirmation</h1>
+    <p class="page-subtitle">Mine's Restaurant · Flavours of Rayalaseema</p>
+</header>
+
+<main class="container pb-4">
+
+    <section class="panel text-center">
+        <div class="success-icon" aria-hidden="true">✓</div>
+
+        <h2 class="success-heading">Thank You for Your Order!</h2>
+
+        <p class="muted mb-1">
+            Your order has been placed successfully.
+        </p>
+
+        <p class="muted small mb-1">Your order reference number</p>
+
+        <div class="order-number">
+            {{ order.order_number }}
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2 class="section-heading">Order Details</h2>
+
+        <div class="detail-row">
+            <span class="detail-label">Customer</span>
+            <span class="detail-value">{{ order.customer_name }}</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Phone</span>
+            <span class="detail-value">{{ order.phone }}</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Order type</span>
+            <span class="detail-value">{{ order.get_order_type_display }}</span>
+        </div>
+
+        {% if order.delivery_address %}
+        <div class="detail-row">
+            <span class="detail-label">Delivery address</span>
+            <span class="detail-value">{{ order.delivery_address }}</span>
+        </div>
+        {% endif %}
+    </section>
+
+    <section class="panel">
+        <h2 class="section-heading">Items Ordered</h2>
+
+        {% for item in order.items.all %}
+        <div class="item-row">
+            <div>
+                <div class="item-name">{{ item.dish.name }}</div>
+                <div class="small muted">
+                    {{ item.quantity }} × ₹{{ item.unit_price|floatformat:2 }}
+                </div>
+            </div>
+
+            <strong class="item-price">
+                ₹{{ item.line_total|floatformat:2 }}
+            </strong>
+        </div>
+        {% empty %}
+        <p class="muted small mb-0">
+            Item details are not available.
+        </p>
+        {% endfor %}
+
+        <div class="detail-row mt-2">
+            <span class="detail-label">Subtotal</span>
+            <strong>₹{{ order.subtotal|floatformat:2 }}</strong>
+        </div>
+
+        <div class="total-row">
+            <span>Total Amount</span>
+            <strong>₹{{ order.total|floatformat:2 }}</strong>
+        </div>
+
+        <p class="small muted mt-3 mb-0">
+            This page confirms your order. It does not represent an online
+            payment receipt.
+        </p>
+    </section>
+
+    <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+        <a href="{% url 'menu_view' %}" class="btn-mine btn-green">
+            ← Back to Menu
+        </a>
+
+        <a href="{% url 'create_review' %}" class="btn-mine btn-gold">
+            Leave a Review
+        </a>
+
+        <a href="{% url 'update_selection' %}" class="btn-mine btn-dark">
+            Selected Dishes
+        </a>
+    </div>
+
+</main>
+</body>
+</html>
